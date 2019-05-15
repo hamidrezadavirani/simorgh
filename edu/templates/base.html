@@ -1,0 +1,103 @@
+{% load static from staticfiles %}
+{% load staticfiles %}
+
+<!doctype html>
+<html lang="en">
+<head>
+
+    <title>{% block title %}{% endblock %}</title>
+    <!--
+        <script src="../../static/edu/js/test.js"></script>
+    -->
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/edu/css/bootstrap-rtl.css">
+
+    {% block style %}
+    {% endblock %}
+
+</head>
+<body>
+
+
+<div class="text-light jumbotron jumbotron-fluid flex-column d-flex text-muted justify-content-center mt-0 mb-0 " style="background-color: #c4dfe6">
+<div class="d-flex justify-content-center text-center p-5"><h2>به سیستم مدرسه مفید خوش آمدید</h2></div>
+</div>
+
+
+
+
+    <nav class="navbar navbar-expand-sm  navbar-dark" style="background-color: #66a5ad;">
+          <!-- Brand -->
+          <a class="navbar-brand" href="/">صفحه اصلی</a>
+
+          <!-- Links -->
+          <ul class="navbar-nav">
+
+           <li class="nav-item">
+              <a class="nav-link" href="/dashboard/"> داشبورد</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/about_us/">درباره</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact_us/">ارتباط باما</a>
+            </li>
+
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                لینک ها
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="https://www.kntu.ac.ir/">دانشگاه خواجه نصیر</a>
+                <a class="dropdown-item" href="http://www.sharif.ir/home">دانشگاه شریف</a>
+                <a class="dropdown-item" href="http://www.aut.ac.ir/aut/fa/">دانشگاه امیرکبیر</a>
+              </div>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="">کاربر   {{ user.username }}  خوش أمدید</a>
+
+            </li>
+            <li class="nav-item mr-5">
+                <a class="nav-link"  href="/login/">ورود</a>
+            </li>
+          </ul>
+        </nav>
+
+
+
+
+
+{% block content %}{% endblock %}
+
+<div class="text-light jumbotron jumbotron-fluid flex-column d-flex col-12 text-muted justify-content-center mt-0 mb-0 " style="background-color: #c4dfe6" >
+
+<div class="d-flex justify-content-center"><h5>ما به آینده فرزندان شما می اندیشیم</h5></div>
+
+    <div class="thumbnail d-flex justify-content-center">
+        <img class="img-fluid mt-3" style="max-width:50%; height:auto;" src="../../static/edu/images/logo.png"  alt="Image No!" style="width: 100%;">
+    </div>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block title %}داشبورد{% endblock %}
+
+    {% block style %}
+
+    <style>
+ul{
+list-style: none;
+}
+
+a{
+text-decoration: none;
+color: white;
+}
+
+#wrapper li{
+background-color: #66a5ad;
+width: 250px;
+padding: 15px;
+
+}
+
+</style>
+
+    {% endblock %}
+
+
+{% block content %}
+
+
+
+
+        <div class="p-5" style="background-color: azure; height:10px;">
+           کاربر   {{ user.username }}  خوش أمدید
+        </div>
+
+
+
+
+<div id="wrapper" class="d-flex py-3 px-0">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper mx-0">
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="/students/">مدیریت دانش آموزان</a>
+                </li>
+                <li>
+                    <a href="/teachers/">مدیریت معلمان</a>
+                </li>
+                <li>
+                    <a href="#"> تخصیص معلم و درس به کلاس‫‬</a>
+                </li>
+                <li>
+                    <a href="#">ثبت دانش آموز در کلاس</a>
+                </li>
+                <li>
+                    <a href="#">مشاهده فهرست کلاس</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1> داشبورد مدیریتی کاربران</h1>
+                        <p>داشبورد معمولا از مجموعه ای از عناصر گرافیکی تشکیل شده است و قادر به پیوستن به منابع متنوع می باشد، یعنی اطلاعات را از بانک های اطلاعاتی موجود در سازمان استخراج کرده و به صورت یکپارچه در یک صفحه، نمایش می دهد.داشبورد می تواند برای تمامی بخش های سازمان در نظر گرفته شود، مثل: منابع انسانی، استخدام، فروش، عملیات، امنیت، فناوری اطلاعات، مدیریت پروژه، مدیریت ارتباط با مشتری و غیره.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+
+
+{% endblock %}

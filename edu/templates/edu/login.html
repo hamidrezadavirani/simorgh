@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %} ورود کاربران {% endblock %}
+
+{% block content %}
+
+    <div style="background-color: azure; height:200px;">
+
+    </div>
+
+    <div class="p-5 d-flex justify-content-center" style="background-color: azure; height:600px;">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>اضافه کردن دانش آموز</title>
+</head>
+<body>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="اضافه کردن دانش آموز">
+</form>
+
+</body>
+</html>
