@@ -1,5 +1,3 @@
-from urllib import request
-from django.contrib.auth.models import User
 from django.shortcuts import render
 from .models import Student, Classroom, Teacher
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -9,17 +7,17 @@ from edu import forms
 from django.db.models import Q
 from .serializers import StudentSerializer
 from django.http import JsonResponse
-from django.contrib.auth.views import LoginView
-import urllib.request
 
 
 def display_dashboard(request):
+    print(request.user.groups.all().first())
     return render(request, 'edu/dashboard.html', {})
+
 
 def display_main(request):
     current_user = request.user
-    print (current_user)
-    return render(request,'edu/main.html', {})
+    print(current_user)
+    return render(request, 'edu/main.html', {})
 
 
 def students_show(request):
@@ -32,19 +30,15 @@ def students_show(request):
 def about_us(request):
     return render(request, 'edu/about_us.html', {})
 
+
 def contact_us(request):
     return render(request, 'edu/contact_us.html', {})
+
 
 def class_list(request, class_id):
     classroom = Classroom.objects.filter(id=class_id).first()
     classroom_students = list(Student.objects.filter(classroom=classroom))
     return render(request, 'edu/student_list.html', {'classroom_student': classroom_students})
-
-class login(LoginView):
-
-    template_name = 'edu/main.html'
-    success_url = '/teachers'
-    # form_class = forms.LoginForm
 
 
 class StudentListView(ListView):
@@ -60,7 +54,6 @@ class StudentCreateView(CreateView):
 class TeacherListView(ListView):
     model = Teacher
 
-
     def get_context_data(self, **kwargs):
         context = super(TeacherListView, self).get_context_data(**kwargs)
         form = forms.TeacherSearchForm()
@@ -72,7 +65,7 @@ class TeacherListView(ListView):
         first_name = self.request.GET.get('first_name')
         last_name = self.request.GET.get('last_name')
         if self.request.GET and any([first_name, last_name]):
-            queryset = queryset.filter(Q(user__first_name=first_name) | Q(user__last_name=last_name))
+            queryset = queryset.filter(Q(user__first_name=first_name) & Q(user__last_name=last_name))
         return queryset
 
 

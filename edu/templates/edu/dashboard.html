@@ -1,62 +1,68 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
-
 {% block title %}داشبورد{% endblock %}
+{% block style %}
 
-    {% block style %}
-
-    <style>
 ul{
-list-style: none;
+    list-style: none;
 }
 
 a{
-text-decoration: none !important;
-color: white;
+    text-decoration: none !important;
+    color: white;
 }
 
 a:hover{
-color: white;
+    color: white;
 }
 
 #wrapper li:hover {
-background-color: darkcyan;
+    background-color: darkcyan;
 }
-
-
-
 
 #wrapper li{
-background-color: #77B6AE;
-width: 280px;
-padding: 20px;
+    background-color: #77B6AE;
+    width: 280px;
+    padding: 20px;
 }
 
-</style>
+{% if user.groups.all.0.name == "student" or user.groups.all.0.name == "parent" or user.groups.all.0.name == "teacher" %}
+    #manage_teachers{
+    display: none;
+    }
+    #manage_students{
+    display: none;
+    }
+    #teacher_course_to_class{
+    display: none;
+    }
+    #register_student_in_class{
+    display: none;
+    }
+{% endif %}
 
-    {% endblock %}
-
+{% endblock %}
 
 {% block content %}
 
-<div id="wrapper" class="d-flex px-0" >
 
+<div id="wrapper" class="d-flex px-0" >
         <!-- Sidebar -->
         <div id="sidebar-wrapper col-sm-12" style="background-color: #77B6AE;">
             <ul class="sidebar-nav pb-5 p-0 ">
-                <li>
+                <li id="manage_students">
                     <a href="/students/">مدیریت دانش آموزان</a>
                 </li>
-                <li>
+                <li id="manage_teachers">
                     <a href="/teachers/">مدیریت معلمان</a>
                 </li>
-                <li>
+                <li id="teacher_course_to_class">
                     <a href="#"> تخصیص معلم و درس به کلاس‫‬</a>
                 </li>
-                <li>
+                <li id="register_student_in_class">
                     <a href="#">ثبت دانش آموز در کلاس</a>
                 </li>
-                <li>
+                <li id="display_class_list">
                     <a href="#">مشاهده فهرست کلاس</a>
                 </li>
             </ul>
@@ -75,11 +81,6 @@ padding: 20px;
             </div>
         </div>
         <!-- /#page-content-wrapper -->
-
     </div>
     <!-- /#wrapper -->
-
-
-
-
 {% endblock %}

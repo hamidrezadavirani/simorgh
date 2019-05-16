@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^dashboard/$', views.display_dashboard),
     url('', views.display_main),
 
+
     # url(r'^add/(?P<pk>[0-9]+)/$', views.StudentUpdateView.as_view(), name='update'),
 ]
 

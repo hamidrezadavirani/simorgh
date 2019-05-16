@@ -24,7 +24,7 @@
 
         {% for classroom in classroom_list %}
             <tr>
-                <td><a href="/class/classrooms/{{ classroom.id }}">بیشتر</a></td>
+                <td><a href="{{ classroom.id }}/">بیشتر</a></td>
                 <td>{{ classroom.education_year }}</td>
                 <td>{{ classroom.branch }}</td>
                 <td>{{ classroom.level_field }}</td>

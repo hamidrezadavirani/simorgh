@@ -18,15 +18,31 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/edu/css/bootstrap-rtl.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+@font-face{
+font-family : 'IranSans';
+src : url('../../static/edu/fonts/B-NAZANIN.TTF');
+}
+
+    *{
+        font-family: "IranSans";
+    }
 
     {% block style %}
     {% endblock %}
+    </style>
+
+
 
 </head>
 <body>
 
 
 <div class="text-light jumbotron jumbotron-fluid flex-column d-flex text-muted justify-content-center mt-0 mb-0 " style="background-color: #c4dfe6">
+
 <div class="d-flex justify-content-center text-center p-5"><h2>به سیستم مدرسه مفید خوش آمدید</h2></div>
 </div>
 
@@ -62,19 +78,21 @@
                 <a class="dropdown-item" href="http://www.aut.ac.ir/aut/fa/">دانشگاه امیرکبیر</a>
               </div>
             </li>
-            <li class="nav-item">
-            <a class="nav-link" href="">کاربر   {{ user.username }}  خوش أمدید</a>
 
-            </li>
+            {% if user.is_authenticated %}
             <li class="nav-item mr-5">
+                        <li class="nav-item">
+            <a class="nav-link" href="">کاربر   {{ user.username }}  خوش أمدید</a>
+            </li>
+                <a class="nav-link"  href="/logout/">خروج</a>
+            </li>
+            {% else %}
+                        <li class="nav-item mr-5">
                 <a class="nav-link"  href="/login/">ورود</a>
             </li>
+            {% endif %}
           </ul>
         </nav>
-
-
-
-
 
 {% block content %}{% endblock %}
 
