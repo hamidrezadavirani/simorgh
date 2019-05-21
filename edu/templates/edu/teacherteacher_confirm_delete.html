@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block title %}لیست معلمان{% endblock %}
+
+{% block content %}
+<div class="p-5 m-5"></div>
+<div class="d-flex justify-content-center" >
+
+<form method="post">{% csrf_token %}
+    <p>مطمن هستید که می خواهیید کاربر {{ object }} را حذف کنید؟</p>
+    <div class="d-flex justify-content-center" >
+
+       <input class="btn btn-primary" type="submit" value="حذف کاربر">
+    </div>
+
+</form>
+
+<div class="p-5 m-5"></div>
+
+</div>
+{% endblock %}
+
+
+

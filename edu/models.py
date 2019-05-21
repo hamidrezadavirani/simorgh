@@ -17,7 +17,8 @@ class Student(models.Model):
 class Teacher(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hire_date = models.DateField()
-
+    # profile_picture = models.ImageField(upload_to='media' ,null=True)
+    image = models.ImageField(upload_to='profile_image', blank=True)
     @property #?????????????????????????????????????????????????????????????????????????????????????????????????????????
     def get_experience(self):
         return datetime.datetime.now().year - self.hire_date.year
@@ -59,6 +60,7 @@ class LevelField(models.Model):
 
 
 class Classroom(models.Model):
+
     level_field = models.ForeignKey('LevelField', on_delete=models.SET_NULL, null=True)
     A, B, C = 'a', 'b', 'c'
     branch_choices = (
@@ -66,6 +68,7 @@ class Classroom(models.Model):
         (B, 'ب'),
         (C, 'ج')
     )
+
     branch = models.CharField(max_length=1, choices=branch_choices, default='a', null=True)
     education_year = models.CharField(max_length=20, null=True)
     courses = models.ManyToManyField('Course', through='TeacherClassCourse', related_name='classrooms')
