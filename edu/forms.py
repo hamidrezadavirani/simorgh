@@ -1,13 +1,10 @@
 from django import forms
-from .models import User, Teacher
 
 
 class TeacherSearchForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
-
     profession = forms.CharField(max_length=50, required=False, label='تخصص')
-
     DIPLOMA, ASSOCIATE, BACHELOR, MASTER, PHD = 'DP', 'AS', 'BA', 'MA', 'PHD'
     degree_choices = (
         (DIPLOMA, 'دیپلم'),
@@ -16,8 +13,13 @@ class TeacherSearchForm(forms.Form):
         (MASTER, 'فوق لیسانس'),
         (PHD, 'دکتری')
     )
-
     education_degree = forms.ChoiceField(choices=degree_choices, required=False, label='مدرک تحصیلی')
+
+
+class StudentSearchForm(forms.Form):
+    first_name = forms.CharField(max_length=50, required=False, label='نام')
+    last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
+
 
 
 # class UserForm(forms.ModelForm):

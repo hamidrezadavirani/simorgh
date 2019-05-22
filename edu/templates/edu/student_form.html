@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>اضافه کردن دانش آموز</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% block title %}اضافه کردن دانش آموز{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center p-5">
 
-<form action="" method="post">
+    <form  action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="اضافه کردن دانش آموز">
-</form>
+        {% if object %}
+            <input type="submit" value="ویرایش دانش آموز">
+        {% else %}
+            <input type="submit" value="اضافه کردن دانش آموز">
+        {% endif %}
+    </form>
 
-</body>
-</html>
+</div>
+{%endblock%}

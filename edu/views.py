@@ -1,17 +1,57 @@
-from django.shortcuts import render
-from .models import Student, Classroom, Teacher, User
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
 from edu import forms
 from django.db.models import Q
-from .serializers import StudentSerializer, TeacherSerializer
+from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.generic.list import ListView
+from .models import Student, Classroom, Teacher, TeacherClassCourse
+from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required
+from .serializers import StudentSerializer, TeacherSerializer
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+
+class StudentListView(ListView):
+    model = Student
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentListView, self).get_context_data(**kwargs)
+        form = forms.StudentSearchForm()
+        context['form'] = form
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        first_name = self.request.GET.get('first_name')
+        last_name = self.request.GET.get('last_name')
+
+        if self.request.GET and any([first_name, last_name]):
+            queryset = Student.objects.filter(
+                Q(user__first_name=first_name) |
+                Q(user__last_name=last_name)
+            )
+        return queryset
+
+
+class StudentDeleteView(DeleteView):
+    model = Student
+    template_name_suffix = '_confirm_delete'
+    success_url = '/students/'
+
+
+class StudentCreateView(CreateView):
+    model = Student
+    fields = ['user', 'last_modified_date', 'student_id']
+    success_url = '/students/'
+
+
+class StudentUpdateView(UpdateView):
+    model = Student
+    fields = ['user', 'last_modified_date', 'student_id']
+    success_url = '/students/'
 
 
 class TeacherListView(ListView):
     model = Teacher
-
 
     def get_context_data(self, **kwargs):
         context = super(TeacherListView, self).get_context_data(**kwargs)
@@ -38,12 +78,11 @@ class TeacherListView(ListView):
 
 class TeacherDeleteView(DeleteView):
     model = Teacher
-    template_name_suffix = 'teacher_confirm_delete'
+    template_name_suffix = '_confirm_delete'
     success_url = ('/teachers/')
 
 
 class TeacherCreateView(CreateView):
-
     model = Teacher
     success_url = '/teachers/'
     fields = '__all__'
@@ -61,45 +100,36 @@ class TeacherUpdateView(UpdateView):
 
 
 
+def about_us(request):
+    return render(request, 'edu/about_us.html', {})
 
 
+def contact_us(request):
+    return render(request, 'edu/contact_us.html', {})
 
 
+@login_required(login_url='/login/')
+def display_dashboard(request):
+    print(request.user.groups.all().first())
+    return render(request, 'edu/dashboard.html', {})
 
 
+def display_main(request):
+    current_user = request.user
+    # print(current_user)
+    return render(request, 'edu/main.html', {})
 
 
+def data_api(request):
+    if request.method == 'GET':
+        teachers = Teacher.objects.all()
+        serialized = TeacherSerializer(teachers, many=True)
+        data_dict = {'teachers': serialized.data}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class StudentListView(ListView):
-    model = Student
-    success_url = '../'
-
-
-class StudentCreateView(CreateView):
-    model = Student
-    fields = ['student_id', 'user', 'last_modified_date']
-    success_url = '/class/students/create/'
+        students = Student.objects.all()
+        serialized = StudentSerializer(students, many=True)
+        data_dict.update({'students': serialized.data})
+        return JsonResponse(data_dict, safe=False)
 
 
 class ClassroomListView(ListView):
@@ -122,10 +152,33 @@ class ClassroomDetailView(DetailView):
         return context
 
 
-# class StudentUpdateView(UpdateView):
-#     model = Student
-#     fields = ['student_id', 'user', 'last_modified_date']
-#     success_url = '/class/add/'
+def class_list(request, class_id):
+    classroom = Classroom.objects.filter(id=class_id).first()
+    classroom_students = list(Student.objects.filter(classroom=classroom))
+    return render(request, 'edu/student_list.html', {'classroom_student': classroom_students})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class AddStudent(FormView):
@@ -135,40 +188,3 @@ class ClassroomDetailView(DetailView):
 # def form_valid(self, form):
 #     form.save()
 #     return super(AddStudent, self).form_valid(form)
-
-
-def data_api(request):
-    if request.method == 'GET':
-        teachers = Teacher.objects.all()
-        serialized = TeacherSerializer(teachers, many=True)
-        data_dict = {'teachers': serialized.data}
-
-        students = Student.objects.all()
-        serialized = StudentSerializer(students, many=True)
-        data_dict.update({'students': serialized.data})
-        return JsonResponse(data_dict, safe=False)
-
-
-def about_us(request):
-    return render(request, 'edu/about_us.html', {})
-
-
-def contact_us(request):
-    return render(request, 'edu/contact_us.html', {})
-
-
-def display_dashboard(request):
-    print(request.user.groups.all().first())
-    return render(request, 'edu/dashboard.html', {})
-
-
-def display_main(request):
-    current_user = request.user
-    print(current_user)
-    return render(request, 'edu/main.html', {})
-
-
-def class_list(request, class_id):
-    classroom = Classroom.objects.filter(id=class_id).first()
-    classroom_students = list(Student.objects.filter(classroom=classroom))
-    return render(request, 'edu/student_list.html', {'classroom_student': classroom_students})
