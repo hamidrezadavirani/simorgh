@@ -2,6 +2,7 @@ from django import forms
 
 
 class TeacherSearchForm(forms.Form):
+
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
     profession = forms.CharField(max_length=50, required=False, label='تخصص')
@@ -17,9 +18,21 @@ class TeacherSearchForm(forms.Form):
 
 
 class StudentSearchForm(forms.Form):
+
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
 
+
+class ClassroomSearchForm(forms.Form):
+
+    A, B, C = 'a', 'b', 'c'
+    branch_choices = (
+        (A, 'الف'),
+        (B, 'ب'),
+        (C, 'ج')
+    )
+    branch = forms.ChoiceField(choices=branch_choices)
+    education_year = forms.CharField(max_length=20,required=False)
 
 
 # class UserForm(forms.ModelForm):

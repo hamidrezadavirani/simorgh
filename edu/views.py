@@ -3,12 +3,17 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.generic.list import ListView
-from .models import Student, Classroom, Teacher, TeacherClassCourse
+from .models import Student, Classroom, Teacher, TeacherClassCourse, Register
 from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required
 from .serializers import StudentSerializer, TeacherSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+
+class Register(CreateView):
+    model = Register
+    fields = '__all__'
+    success_url = '/dashboard/'
 
 class StudentListView(ListView):
     model = Student
@@ -94,10 +99,10 @@ class TeacherUpdateView(UpdateView):
     success_url = '/teachers/'
 
 
-
-
-
-
+class TeacherClassCourseCreateView(CreateView):
+    model = TeacherClassCourse
+    fields = '__all__'
+    success_url = '/dashboard/'
 
 
 def about_us(request):
@@ -135,11 +140,19 @@ def data_api(request):
 class ClassroomListView(ListView):
     model = Classroom
 
+    def get_context_data(self, **kwargs):
+        context = super(ClassroomListView, self).get_context_data(**kwargs)
+        form = forms.ClassroomSearchForm
+        context['form'] = form
+        return context
 
-class ClassroomCreateView(CreateView):
-    model = Classroom
-    fields = ['level_field', 'branch', 'education_year']
-    success_url = '/class/classrooms/create/'
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        branch = self.request.GET.get('branch')
+        education_year = self.request.GET.get('education_year')
+        if self.request.GET and any([branch, education_year]):
+            queryset = Classroom.objects.filter(Q(branch=branch) | Q(education_year=education_year))
+        return queryset
 
 
 class ClassroomDetailView(DetailView):
@@ -156,30 +169,6 @@ def class_list(request, class_id):
     classroom = Classroom.objects.filter(id=class_id).first()
     classroom_students = list(Student.objects.filter(classroom=classroom))
     return render(request, 'edu/student_list.html', {'classroom_student': classroom_students})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # class AddStudent(FormView):
 # template_name = 'edu/student_create.html'

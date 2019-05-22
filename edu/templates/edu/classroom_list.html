@@ -1,51 +1,48 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>لیست کلاسها</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}لیست دانش آموزان{% endblock %}
+{% block content %}
 
-<div class="d-flex justify-content-center p-5 text-center">
-
-    <table class="table table-light text-light bg-secondary col-8">
-        <thead><th>بیشتر</th>
-            <th>سال تحصیلی</th>
-            <th>گروه</th>
-            <th>پایه</th>
-
-        </thead>
-
-        {% for classroom in classroom_list %}
-            <tr>
-                <td><a href="{{ classroom.id }}/">بیشتر</a></td>
-                <td>{{ classroom.education_year }}</td>
-                <td>{{ classroom.branch }}</td>
-                <td>{{ classroom.level_field }}</td>
-
-            </tr>
-        {% endfor %}
-
-    </table>
-
+<div class="d-flex justify-content-center m-0 text-center text-muted pt-5">
+<h3>لیست کلاس ها</h3>
 </div>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+<div class="d-flex justify-content-center p-5 text-center">
+    <table class="table text-muted bg-muted col-8">
+        <thead>
+            <th>پایه</th>
+            <th>گروه</th>
+            <th>سال تحصیلی</th>
+            <th>بیشتر</th>
+        </thead>
+        {% for classroom in classroom_list %}
+            <tr>
+                <td>{{ classroom.level_field }}</td>
+                <td>{{ classroom.branch }}</td>
+                <td>{{ classroom.education_year }}</td>
+                <td><a href="{{ classroom.id }}/">بیشتر</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="d-flex justify-content-center m-3 text-center text-muted">
+    <h3>جستوجوی کلاس </h3>
+</div>
+
+<div class=" mb-5  d-flex justify-content-center p-2 text-center">
+    <form action="" method="GET">
+        {% csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input class="btn btn-outline-primary" type="submit" value="جستجو">
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+

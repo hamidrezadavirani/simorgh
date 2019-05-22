@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% block title %}اضافه کلاس - درس - معلم{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center p-5">
+
+    <form  action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+        {% if object %}
+            <input type="submit" value="ویرایش ">
+        {% else %}
+            <input type="submit" value="اضافه کردن ">
+        {% endif %}
+    </form>
+
+</div>
+{%endblock%}

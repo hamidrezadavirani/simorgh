@@ -105,3 +105,6 @@ class TeacherClassCourse(models.Model):
     classroom = models.ForeignKey('Classroom', related_name='teacher_class_courses', on_delete=models.SET_NULL, null=True)
     course = models.ForeignKey('Course', related_name='teacher_class_courses', on_delete=models.SET_NULL, null=True)
     class_time = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.teacher) + ' ' + str(self.classroom) + ' ' + str(self.course)

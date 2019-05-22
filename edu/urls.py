@@ -9,9 +9,6 @@ urlpatterns = [
 
     url(r'^data_api/$', views.data_api),
 
-
-
-
     url(r'^teachers/create/$', views.TeacherCreateView.as_view()),
     url(r'^teachers/$', views.TeacherListView.as_view()),
     url(r'^teachers/update/(?P<pk>[0-9]+)/$', views.TeacherUpdateView.as_view()),
@@ -22,11 +19,13 @@ urlpatterns = [
     url(r'^students/update/(?P<pk>[0-9]+)/$', views.StudentUpdateView.as_view()),
     url(r'^students/delete/(?P<pk>[0-9]+)/$', views.StudentDeleteView.as_view()),
 
+    url(r'^teacherclasscourse/$', views.TeacherClassCourseCreateView.as_view()),
 
-    #
-    # url(r'^classrooms/$', views.ClassroomListView.as_view()),
-    # url(r'^classrooms/create/$', views.ClassroomCreateView.as_view()),
-    # url(r'^classrooms/(?P<pk>[0-9]+)/$',views.ClassroomDetailView.as_view()),
+    url(r'^classrooms/$', views.ClassroomListView.as_view()),
+    url(r'^classrooms/(?P<pk>[0-9]+)/$',views.ClassroomDetailView.as_view()),
+
+    url(r'^register/$' , views.Register.as_view()),
+
     url(r'^about_us/$', views.about_us),
     url(r'^contact_us/$', views.contact_us),
     url(r'^dashboard/$', views.display_dashboard),
