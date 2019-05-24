@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from .models import Student, Teacher
+from .models import Student, Teacher, Register
 from rest_framework import serializers
 
 
@@ -11,6 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
+        fields = '__all__'
+
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Register
         fields = '__all__'
 
 

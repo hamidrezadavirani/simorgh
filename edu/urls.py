@@ -1,5 +1,6 @@
-from django.conf.urls import url
+from django.conf.urls import url, handler404
 from edu import views
+
 
 
 app_name = 'edu'
@@ -30,10 +31,9 @@ urlpatterns = [
     url(r'^contact_us/$', views.contact_us),
     url(r'^dashboard/$', views.display_dashboard),
     url(r'^$', views.display_main),
-    # url(r'^(?P<class_id>[0-9])+/$', views.class_list),
-    # url(r'^add/(?P<pk>[0-9]+)/$', views.StudentUpdateView.as_view(), name='update'),
 ]
 
 
 
 
+handler404 = 'views.p404'

@@ -19,7 +19,7 @@
 
         {% for teacher in teacher_list %}
             <tr>
-                <td><img src="{{ teacher.image.url }}" style="width: 40px; height: 40px;" alt="pic"></td>
+                <td><img class="rounded-circle" src="{{ teacher.image.url }}" style="width: 40px; height: 40px;" alt="pic"></td>
                 <td>{{ teacher.user.first_name }}</td>
                 <td>{{ teacher.user.last_name }}</td>
                 <td>{{ teacher.profession.all.0 }}</td>
@@ -29,7 +29,6 @@
                 </td>
             </tr>
         {% endfor %}
-
             <tr>
                 <td>افزودن معلم</td>
                 <td></td>

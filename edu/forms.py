@@ -1,8 +1,9 @@
 from django import forms
+from django.forms import ModelForm
+from .models import Student, Register
 
 
 class TeacherSearchForm(forms.Form):
-
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
     profession = forms.CharField(max_length=50, required=False, label='تخصص')
@@ -18,13 +19,11 @@ class TeacherSearchForm(forms.Form):
 
 
 class StudentSearchForm(forms.Form):
-
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
 
 
 class ClassroomSearchForm(forms.Form):
-
     A, B, C = 'a', 'b', 'c'
     branch_choices = (
         (A, 'الف'),
@@ -32,8 +31,13 @@ class ClassroomSearchForm(forms.Form):
         (C, 'ج')
     )
     branch = forms.ChoiceField(choices=branch_choices)
-    education_year = forms.CharField(max_length=20,required=False)
+    education_year = forms.CharField(max_length=20, required=False)
 
+class RegisterForm(forms.ModelForm):
+
+    class Meta:
+        model = Register
+        fields = '__all__'
 
 # class UserForm(forms.ModelForm):
 #     class Meta:

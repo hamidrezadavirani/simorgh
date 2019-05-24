@@ -90,14 +90,17 @@ class Course(models.Model):
 class StudentCourse(models.Model):
     student = models.ForeignKey('Student', related_name='student_courses', on_delete=models.SET_NULL, null=True)
     course = models.ForeignKey('Course', related_name='student_courses', on_delete=models.SET_NULL, null=True)
-    final_grade = models.FloatField()
-    mid_grade = models.FloatField()
+    final_grade = models.FloatField( null= True)
+    mid_grade = models.FloatField( null= True)
 
 
 class Register(models.Model):
     student = models.ForeignKey('Student', related_name='registers', on_delete=models.SET_NULL, null=True)
     classroom = models.ForeignKey('Classroom', related_name='registers', on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField()
+
+    def __str__(self):
+        return str(self.student) + ' ' + str(self.classroom)
 
 
 class TeacherClassCourse(models.Model):
