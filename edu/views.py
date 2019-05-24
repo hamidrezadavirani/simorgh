@@ -181,6 +181,7 @@ def contact_us(request):
     return render(request, 'edu/contact_us.html', {})
 
 
+
 @login_required(login_url='/login/')
 def display_dashboard(request):
     # print(request.user.groups.all().first())
