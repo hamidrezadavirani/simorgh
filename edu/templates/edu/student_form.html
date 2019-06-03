@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex justify-content-center p-5">
 
-    <form  action="" method="post" enctype="multipart/form-data">
+    <form  class="form-group" action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
         {% if object %}

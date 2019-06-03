@@ -21,6 +21,28 @@ class TeacherSearchForm(forms.Form):
 class StudentSearchForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=False, label='نام')
     last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
+    birth_date = forms.CharField(max_length=10,required=False, label='تاریخ تولد')
+    FIRST, SECOND, THIRD = 'first', 'second', 'third'
+    level_choices = (
+        (FIRST, 'اول'),
+        (SECOND, 'دوم'),
+        (THIRD, 'سوم')
+    )
+
+    level = forms.ChoiceField(choices=level_choices)
+
+    MATH, NATURAL, HUMANITY = 'math', 'natural', 'humanity'
+    field_choices = (
+        (MATH, 'ریاضی'),
+        (NATURAL, 'تجربی'),
+        (HUMANITY, 'انسانی')
+    )
+    field = forms.ChoiceField(choices=field_choices)
+
+
+
+
+
 
 
 class ClassroomSearchForm(forms.Form):
@@ -38,6 +60,24 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = Register
         fields = '__all__'
+
+class StudentCreateViewForm(forms.ModelForm):
+
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    username = forms.CharField(required=True)
+    password = forms.CharField(required=True)
+    birth_date = forms.CharField(required=False)
+    image = forms.ImageField()
+
+
+    class Meta:
+        model = Student
+        fields = [ 'student_id', 'image', 'birth_date']
+
+    def save(self, commit=True):
+        return super(StudentCreateViewForm, self).save(commit=commit)
+
 
 # class UserForm(forms.ModelForm):
 #     class Meta:

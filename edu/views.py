@@ -9,12 +9,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Student, Classroom, Teacher, TeacherClassCourse, Register, StudentCourse
+from .models import Student, Classroom, Teacher, TeacherClassCourse, Register, StudentCourse, User
 from .serializers import StudentSerializer, TeacherSerializer, RegisterSerializer
+from django.contrib.auth.hashers import make_password
+from django.forms.models import model_to_dict
 
 staff_group = user_passes_test(lambda u: any([
     Group.objects.get(name='staff') in u.groups.all()
-    # 'staff' in str(u.groups.all())
 ]))
 
 teacher_group = user_passes_test(lambda u: any([
@@ -49,18 +50,40 @@ class StudentListView(ListView):
         context = super(StudentListView, self).get_context_data(**kwargs)
         form = forms.StudentSearchForm()
         context['form'] = form
+        students = Student.objects.all()
+        fields = []
+        for student in students:
+            register_entry = student.registers.first()
+            try:
+                level_field = register_entry.classroom.level_field.get_field_display()
+                fields.append(level_field)
+            except:
+                fields.append('ثبت نام نشده')
+
+        context['fields'] = fields
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(StudentListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()
+
         first_name = self.request.GET.get('first_name')
         last_name = self.request.GET.get('last_name')
+        birth_date = self.request.GET.get('birth_date')
+        field = self.request.GET.get('field')
+        level = self.request.GET.get('level')
 
-        if self.request.GET and any([first_name, last_name]):
+        if self.request.GET and any([first_name, last_name, birth_date, field, level]):
             queryset = Student.objects.filter(
                 Q(user__first_name=first_name) |
-                Q(user__last_name=last_name)
+                Q(user__last_name=last_name) |
+                Q(birth_date=birth_date) |
+                Q(classrooms__level_field__field=field) |
+                Q(classrooms__level_field__level=level)
             )
+        print(queryset)
         return queryset
 
 
@@ -70,25 +93,61 @@ class StudentDeleteView(DeleteView):
     template_name_suffix = '_confirm_delete'
     success_url = '/students/'
 
+    def delete(self, request, *args, **kwargs):
+        print('i deleted this bastard')
+        return super(StudentDeleteView, self).delete(self, request, *args, **kwargs)
+
 
 @method_decorator(staff_group, name='dispatch')
 class StudentCreateView(CreateView):
     model = Student
-    fields = ['user', 'last_modified_date', 'student_id']
     success_url = '/students/'
+    form_class = forms.StudentCreateViewForm
+
+    def form_valid(self, form):
+        usr = User.objects.create(username=form.cleaned_data.pop('username'),
+                                  first_name=form.cleaned_data.pop('first_name'),
+                                  last_name=form.cleaned_data.pop('last_name'),
+                                  password=make_password(form.cleaned_data.pop('password')),
+                                  )
+
+        std = form.save(commit=False)
+
+        std.user = usr
+        std.id = form.cleaned_data['student_id']
+        std.birth_date = form.cleaned_data['birth_date']
+        std.image = form.cleaned_data['image']
+        std.save()
+
+        group = Group.objects.get(name='student')
+
+        group.user_set.add(std.user)
+        group.save()
+
+        return super(StudentCreateView, self).form_valid(form)
 
 
 @method_decorator(staff_group, name='dispatch')
 class StudentUpdateView(UpdateView):
     model = Student
-    fields = ['user', 'last_modified_date', 'student_id']
     success_url = '/students/'
+    form_class = forms.StudentCreateViewForm
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.has_perm('edu.change_student'):
-            return super(StudentUpdateView, self).dispatch(request, *args, **kwargs)
-        else:
-            return render(request, 'edu/templates/404.html', {})
+    def get_initial(self):
+        self.initial.update(model_to_dict(User.objects.filter(students__student_id=self.object.pk).first()
+                                          , fields=['first_name', 'last_name', 'username', 'password']))
+        return self.initial.copy()
+
+    def form_valid(self, form):
+        User.objects.filter(students__student_id=self.object.pk).update(
+            username=form.cleaned_data.pop('username'),
+            first_name=form.cleaned_data.pop('first_name'),
+            last_name=form.cleaned_data.pop('last_name'),
+            password=make_password(form.cleaned_data.pop('password')),
+
+        )
+
+        return super(StudentUpdateView, self).form_valid(form)
 
 
 @method_decorator(staff_group, name='dispatch')
@@ -96,7 +155,6 @@ class TeacherListView(ListView):
     model = Teacher
 
     def get_context_data(self, **kwargs):
-        print('465466545646465456')
         context = super(TeacherListView, self).get_context_data(**kwargs)
         form = forms.TeacherSearchForm()
         context['form'] = form
@@ -173,7 +231,7 @@ def about_us(request):
     return render(request, 'edu/about_us.html', {})
 
 
-def p404(request , exception):
+def p404(request, exception):
     return render(request, '404.html', {})
 
 
@@ -181,16 +239,13 @@ def contact_us(request):
     return render(request, 'edu/contact_us.html', {})
 
 
-
 @login_required(login_url='/login/')
 def display_dashboard(request):
-    # print(request.user.groups.all().first())
     return render(request, 'edu/dashboard.html', {})
 
 
 def display_main(request):
     current_user = request.user
-    # print(current_user)
     return render(request, 'edu/main.html', {})
 
 
@@ -237,7 +292,6 @@ class ClassroomDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # print(context)
         return context
 
 # def class_list(request, class_id):

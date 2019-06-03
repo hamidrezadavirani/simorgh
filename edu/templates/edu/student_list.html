@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}لیست دانش آموزان{% endblock %}
 {% block content %}
+{% load index %}
 
 <div class="d-flex justify-content-center m-0 text-center text-muted pt-5">
 <h3>لیست دانش آموزان</h3>
@@ -10,16 +11,29 @@
 <div class="d-flex justify-content-center p-5 text-center">
     <table class="table text-muted bg-muted col-8">
         <thead>
+            <th>تصویر</th>
             <th>نام</th>
             <th>نام خانوادگی</th>
+            <th>رشته تحصیلی</th>
+            <th>تاریخ تولد</th>
             <th>ابزار</th>
         </thead>
 
         {% for student in student_list %}
             <tr>
+                <td>
+
+                {% if student.image %}
+                    <img src="{{ student.image.url }}" class="rounded-circle" style="width: 40px; height: 40px;" alt="image" />
+                {% else %}
+                    <img class="rounded-circle" src="../../../media/profile_image/default.jpg" style="width: 40px; height: 40px;" alt="image">
+                {% endif %}
+
+                </td>
                 <td>{{ student.user.first_name }}</td>
                 <td>{{ student.user.last_name }}</td>
-
+                <td> {{ fields|index:forloop.counter0 }}</td>
+                <td>{{ student.birth_date }}</td>
                 <td>
                     <a href="/students/delete/{{student.id}}/"><i class="ml-1 fa fa-trash-o"> </i></a>
                     <a href="/students/update/{{student.id}}/"><i class="fa fa-pencil"> </i></a>
@@ -29,6 +43,9 @@
 
             <tr>
                 <td>افزودن دانش آموز</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td><a href="/students/create/"> <i class="fa fa-plus"></i></a></td>
             </tr>

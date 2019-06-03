@@ -5,10 +5,13 @@ import datetime
 
 class Student(models.Model):
     student_id = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE) #????????????????????????????????? one user to many student
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='students',
+                                verbose_name='شماره دانش آموزی')
     courses = models.ManyToManyField('Course', through='StudentCourse', related_name='students')
     classrooms = models.ManyToManyField('Classroom', through='Register', related_name='students')
     last_modified_date = models.DateTimeField(null=True)
+    birth_date = models.CharField(max_length=10, null=True)
+    image = models.ImageField(upload_to='profile_image', blank=True)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -17,9 +20,9 @@ class Student(models.Model):
 class Teacher(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hire_date = models.DateField()
-    # profile_picture = models.ImageField(upload_to='media' ,null=True)
     image = models.ImageField(upload_to='profile_image', blank=True)
-    @property #?????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+    @property
     def get_experience(self):
         return datetime.datetime.now().year - self.hire_date.year
 
@@ -60,8 +63,7 @@ class LevelField(models.Model):
 
 
 class Classroom(models.Model):
-
-    level_field = models.ForeignKey('LevelField', on_delete=models.SET_NULL, null=True)
+    level_field = models.ForeignKey('LevelField', on_delete=models.SET_NULL, null=True, related_name='classrooms')
     A, B, C = 'a', 'b', 'c'
     branch_choices = (
         (A, 'الف'),
@@ -69,7 +71,7 @@ class Classroom(models.Model):
         (C, 'ج')
     )
 
-    branch = models.CharField(max_length=1, choices=branch_choices, default='a', null=True)
+    branch = models.CharField(max_length=1, choices=branch_choices, null=True)
     education_year = models.CharField(max_length=20, null=True)
     courses = models.ManyToManyField('Course', through='TeacherClassCourse', related_name='classrooms')
     teachers = models.ManyToManyField('Teacher', through='TeacherClassCourse', related_name='classrooms')
@@ -80,7 +82,7 @@ class Classroom(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=20)
-    level_field = models.ForeignKey('LevelField', on_delete=models.SET_NULL, null=True)
+    level_field = models.ForeignKey('LevelField', on_delete=models.SET_NULL, null=True, related_name='courses')
     unit = models.IntegerField(null=True)
 
     def __str__(self):
@@ -90,8 +92,8 @@ class Course(models.Model):
 class StudentCourse(models.Model):
     student = models.ForeignKey('Student', related_name='student_courses', on_delete=models.SET_NULL, null=True)
     course = models.ForeignKey('Course', related_name='student_courses', on_delete=models.SET_NULL, null=True)
-    final_grade = models.FloatField( null= True)
-    mid_grade = models.FloatField( null= True)
+    final_grade = models.FloatField(null=True)
+    mid_grade = models.FloatField(null=True)
 
 
 class Register(models.Model):
@@ -105,7 +107,8 @@ class Register(models.Model):
 
 class TeacherClassCourse(models.Model):
     teacher = models.ForeignKey('Teacher', related_name='teacher_class_courses', on_delete=models.SET_NULL, null=True)
-    classroom = models.ForeignKey('Classroom', related_name='teacher_class_courses', on_delete=models.SET_NULL, null=True)
+    classroom = models.ForeignKey('Classroom', related_name='teacher_class_courses', on_delete=models.SET_NULL,
+                                  null=True)
     course = models.ForeignKey('Course', related_name='teacher_class_courses', on_delete=models.SET_NULL, null=True)
     class_time = models.DateTimeField()
 
