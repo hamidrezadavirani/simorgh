@@ -160,6 +160,7 @@ class TeacherListView(ListView):
         context['form'] = form
         return context
 
+
     def get_queryset(self):
         queryset = super().get_queryset()
         first_name = self.request.GET.get('first_name')
